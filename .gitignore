@@ -11,8 +11,6 @@ __pycache__/
 *.pyo
 *.pyd
 *.log
-faiss_index.bin
-sentences.pkl
 *.npy
 *.npz
 *.ipynb_checkpoints/
