@@ -18,6 +18,7 @@ output/
 data/
 temp/
 *.csv
+*.pdf
 *.xlsx
 .DS_Store
 Thumbs.db
