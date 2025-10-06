@@ -1,0 +1,10 @@
+gradio
+PyMuPDF
+tqdm
+spacy
+sentence-transformers
+faiss-cpu
+google-genai
+python-dotenv
+requests
+numpy
