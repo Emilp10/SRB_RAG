@@ -163,30 +163,27 @@ async def chat_stream_endpoint(request: ChatRequest):
         }
     )
 
-# Serve static files (for Hugging Face deployment)
+# Serve static files FIRST (for assets like JS, CSS, images)
 if os.path.exists("static"):
+    app.mount("/assets", StaticFiles(directory="static/assets"), name="assets")
     app.mount("/static", StaticFiles(directory="static"), name="static")
 
-# Serve React app
+# Serve React app for non-asset routes
 @app.get("/{full_path:path}")
 async def serve_react_app(full_path: str = ""):
-    """Serve React app for any path that doesn't match API routes"""
-    print(f"DEBUG: Requested path: '{full_path}'")
-    print(f"DEBUG: Static directory exists: {os.path.exists('static')}")
-    print(f"DEBUG: index.html exists: {os.path.exists('static/index.html')}")
-    if os.path.exists('static'):
-        print(f"DEBUG: Static directory contents: {os.listdir('static')}")
+    """Serve React app for any path that doesn't match API routes or assets"""
+    # Skip serving HTML for asset requests (they should be handled by StaticFiles above)
+    if full_path.startswith("assets/") or full_path.startswith("static/"):
+        raise HTTPException(status_code=404, detail="Asset not found")
     
     # Let API routes handle themselves
     if full_path.startswith("chat") or full_path.startswith("health") or full_path.startswith("docs") or full_path.startswith("openapi"):
         raise HTTPException(status_code=404, detail="Not found")
     
-    # Serve React app's index.html for all routes (including root)
+    # Serve React app's index.html for all other routes (including root)
     if os.path.exists("static/index.html"):
-        print("DEBUG: Serving React app index.html")
         return FileResponse("static/index.html")
     else:
-        print("DEBUG: static/index.html not found, returning JSON response")
         return {"message": "SRB RAG Chatbot API is running!", "status": "healthy", "note": "Frontend not available - static/index.html not found"}
 
 if __name__ == "__main__":
