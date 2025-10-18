@@ -4,9 +4,9 @@ emoji: 🤖
 colorFrom: blue
 colorTo: purple
 sdk: docker
+app_port: 7860
 pinned: false
 license: mit
-app_port: 7860
 ---
 
 # 🤖 SRB RAG Chatbot

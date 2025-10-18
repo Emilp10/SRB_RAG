@@ -1,7 +1,7 @@
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import StreamingResponse
+from fastapi.responses import StreamingResponse, FileResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 import faiss
@@ -160,6 +160,20 @@ async def chat_stream_endpoint(request: ChatRequest):
 # Serve static files (for Hugging Face deployment)
 if os.path.exists("static"):
     app.mount("/static", StaticFiles(directory="static"), name="static")
+
+# Serve React app
+@app.get("/{full_path:path}")
+async def serve_react_app(full_path: str):
+    """Serve React app for any path that doesn't match API routes"""
+    if full_path.startswith("chat") or full_path.startswith("health"):
+        # Let API routes handle themselves
+        raise HTTPException(status_code=404, detail="Not found")
+    
+    # Serve React app's index.html for all other routes
+    if os.path.exists("static/index.html"):
+        return FileResponse("static/index.html")
+    else:
+        return {"message": "SRB RAG Chatbot API is running!", "status": "healthy", "note": "Frontend not available"}
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 7860))  # HF Spaces uses port 7860

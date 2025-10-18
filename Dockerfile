@@ -4,14 +4,13 @@ FROM python:3.11-slim
 # Set working directory
 WORKDIR /app
 
-# Install system dependencies
+# Install system dependencies including Node.js
 RUN apt-get update && apt-get install -y \
-    build-essential \
     curl \
-    software-properties-common \
+    build-essential \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Node.js for frontend build
+# Install Node.js 18
 RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
     && apt-get install -y nodejs
 
@@ -21,16 +20,24 @@ COPY requirements_hf.txt .
 # Install Python dependencies
 RUN pip install --no-cache-dir -r requirements_hf.txt
 
-# Copy entire project
-COPY . .
+# Copy Python files and necessary assets
+COPY app_hf.py .
+COPY rag_pipeline.py .
+COPY preprocess.py .
+COPY faiss_index.bin .
+COPY sentences.pkl .
+COPY SRB-2025.pdf .
+COPY *.png ./
 
-# Build React frontend
+# Copy and build React frontend
+COPY lovable-project ./lovable-project
 WORKDIR /app/lovable-project
-RUN npm install
+RUN npm ci --only=production
 RUN npm run build
 
-# Move back to app directory
+# Move built frontend to static directory
 WORKDIR /app
+RUN mkdir -p static && cp -r lovable-project/dist/* static/
 
 # Expose port 7860 (HF Spaces default)
 EXPOSE 7860
