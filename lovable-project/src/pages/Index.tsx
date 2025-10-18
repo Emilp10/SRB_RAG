@@ -57,8 +57,8 @@ const Index = () => {
     setMessages(prev => [...prev, botMessage]);
 
     try {
-      // Use fetch with proper streaming
-      const response = await fetch('http://localhost:7860/chat/stream', {
+      // Use fetch with proper streaming (relative URL works for both local and HF Spaces)
+      const response = await fetch('/chat/stream', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -124,7 +124,7 @@ const Index = () => {
       }
     } catch (error) {
       console.error('Error calling API:', error);
-      const errorMessage = `Sorry, I encountered an error while processing your question. Please make sure the backend server is running on http://localhost:7860`;
+      const errorMessage = `Sorry, I encountered an error while processing your question. Please try again or check if the backend is available.`;
       
       setMessages(prev => prev.map(msg => 
         msg.id === botMessageId 
