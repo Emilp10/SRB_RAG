@@ -3,13 +3,16 @@
 .gitignore
 .gitattributes
 Rag_venv/
-node_modules/
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
 .env
 .env.*
+
+# Exclude React source (we use pre-built version)
+lovable-project/
+node_modules/
 
 # Development files
 *.bat

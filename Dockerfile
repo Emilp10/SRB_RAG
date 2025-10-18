@@ -4,15 +4,10 @@ FROM python:3.11-slim
 # Set working directory
 WORKDIR /app
 
-# Install system dependencies including Node.js
+# Install system dependencies (minimal for faster build)
 RUN apt-get update && apt-get install -y \
     curl \
-    build-essential \
     && rm -rf /var/lib/apt/lists/*
-
-# Install Node.js 18
-RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
-    && apt-get install -y nodejs
 
 # Copy Python requirements first for better caching
 COPY requirements_hf.txt .
@@ -33,15 +28,8 @@ COPY sentences.pkl .
 COPY bot_avatar.png ./
 COPY NMIMS_LOGO.png ./
 
-# Copy and build React frontend
-COPY lovable-project ./lovable-project
-WORKDIR /app/lovable-project
-RUN npm ci --only=production
-RUN npm run build
-
-# Move built frontend to static directory
-WORKDIR /app
-RUN mkdir -p static && cp -r lovable-project/dist/* static/
+# Copy pre-built React frontend
+COPY static_build ./static
 
 # Expose port 7860 (HF Spaces default)
 EXPOSE 7860
