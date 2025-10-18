@@ -24,10 +24,14 @@ RUN pip install --no-cache-dir -r requirements_hf.txt
 COPY app_hf.py .
 COPY rag_pipeline.py .
 COPY preprocess.py .
+
+# Copy model files (these may be in LFS)
 COPY faiss_index.bin .
 COPY sentences.pkl .
-COPY SRB-2025.pdf .
-COPY *.png ./
+
+# Copy images
+COPY bot_avatar.png ./
+COPY NMIMS_LOGO.png ./
 
 # Copy and build React frontend
 COPY lovable-project ./lovable-project

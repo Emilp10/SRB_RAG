@@ -1,0 +1,29 @@
+# Exclude unnecessary files from Docker context
+.git/
+.gitignore
+.gitattributes
+Rag_venv/
+node_modules/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.env
+.env.*
+
+# Development files
+*.bat
+*.ps1
+*.sh
+DEVELOPMENT.md
+INTEGRATION_SUCCESS.md
+DEPLOYMENT_SUCCESS.md
+test_*.py
+lovable-project.zip
+start_*
+
+# Documentation (except README for HF)
+README_hf.md
+
+# PDF (we have preprocessed files)
+*.pdf
