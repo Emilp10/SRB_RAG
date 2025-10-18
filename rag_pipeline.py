@@ -82,11 +82,34 @@ def generate_answer(client, context_text, query):
         contents=prompt,
         config=types.GenerateContentConfig(
             thinking_config=types.ThinkingConfig(thinking_budget=0),
-            system_instruction="Provide a clear, relevant, and factual answer using the given context. Don't speak about the context, just use it to answer the question.",
+            system_instruction="Provide a clear, relevant, and factual answer using the given context. Don't speak about the context, just use it to answer the question. If the users query is irrelevant to the context like 'count numbers from 1 to 10', respond with 'I'm sorry, I can't assist with that.'",
             temperature=0.2,
         )
     )
     return response.text
+
+
+async def generate_answer_streaming(client, context_text, query):
+    """Generate streaming answer using Gemini API"""
+    prompt = f"""Based on the following context items, please answer the query.
+    Give yourself room to think by extracting relevant passages from the context before answering the query.
+    Don't return the thinking, only return the answer.
+    Make sure your answers are as explanatory as possible.\n\nContext:\n{context_text}\n\nQuestion: {query}"""
+    
+    # Use streaming generation
+    response_stream = client.models.generate_content_stream(
+        model="gemini-2.5-flash",
+        contents=prompt,
+        config=types.GenerateContentConfig(
+            thinking_config=types.ThinkingConfig(thinking_budget=0),
+            system_instruction="Provide a clear, relevant, and factual answer using the given context. Don't speak about the context, just use it to answer the question. If the users query is irrelevant to the context like 'count numbers from 1 to 10', respond with 'I'm sorry, I can't assist with that.'",
+            temperature=0.2,
+        )
+    )
+    
+    for chunk in response_stream:
+        if hasattr(chunk, 'text') and chunk.text:
+            yield chunk.text
 
 
 def answer_query(query, embedding_model, index, sentences, client, top_k=5):
@@ -97,6 +120,18 @@ def answer_query(query, embedding_model, index, sentences, client, top_k=5):
     context_text = "\n".join(retrieved_sentences)
     answer = generate_answer(client, context_text, query)
     return answer
+
+
+async def answer_query_streaming(query, embedding_model, index, sentences, client, top_k=5):
+    """Streaming version of answer_query"""
+    query_embedding = embedding_model.encode([query])[0]
+    distances, indices = index.search(np.array([query_embedding]), top_k)
+    retrieved_sentences = [sentences[i] for i in indices[0]]
+
+    context_text = "\n".join(retrieved_sentences)
+    
+    async for chunk in generate_answer_streaming(client, context_text, query):
+        yield chunk
 
 
 def load_models(pdf_path="SRB-2025.pdf"):

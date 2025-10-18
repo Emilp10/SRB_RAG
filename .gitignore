@@ -1,23 +1,76 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+*.pyo
+*.pyd
+*.so
+build/
+dist/
+*.egg-info/
+
+# Virtual environments
 Rag_venv/
 venv/
 .venv/
 env/
 ENV/
+
+# Environment variables
 .env
 *.env
 .env.*
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
+
+# Large files (use Git LFS)
+*.bin
+*.pkl
+*.pdf
+
+# Logs
 *.log
+logs/
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# React build
+dist/
+build/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+temp/
+output/
+data/
+*.csv
 *.npy
 *.npz
 *.ipynb_checkpoints/
-output/
-data/
-temp/
-*.csv
+
+# Development scripts
+start_*.bat
+start_*.ps1
+start_*.sh
+
+# Archives
+*.zip
+
+# Development docs
+DEVELOPMENT.md
+INTEGRATION_SUCCESS.md
+test_*.py
 *.pdf
 *.xlsx
 .DS_Store

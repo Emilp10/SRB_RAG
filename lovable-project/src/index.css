@@ -1,0 +1,72 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    /* Deep dark theme with rich purples */
+    --background: 240 10% 8%;
+    --foreground: 0 0% 98%;
+
+    --card: 240 8% 12%;
+    --card-foreground: 0 0% 95%;
+
+    --popover: 240 8% 12%;
+    --popover-foreground: 0 0% 95%;
+
+    /* Vibrant indigo/purple primary */
+    --primary: 250 100% 70%;
+    --primary-foreground: 0 0% 100%;
+    --primary-glow: 250 100% 65%;
+
+    /* Dark accent for user messages */
+    --secondary: 240 8% 18%;
+    --secondary-foreground: 250 100% 75%;
+
+    --muted: 240 6% 15%;
+    --muted-foreground: 240 5% 60%;
+
+    /* Purple accent */
+    --accent: 260 80% 55%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 240 6% 20%;
+    --input: 240 6% 16%;
+    --ring: 250 100% 70%;
+
+    --radius: 1rem;
+
+    /* Immersive dark gradient with depth */
+    --gradient-bg: radial-gradient(ellipse at top, hsl(250 60% 12%) 0%, hsl(240 50% 8%) 40%, hsl(230 40% 6%) 100%);
+    
+    /* Glassmorphism for dark */
+    --glass-bg: hsla(240, 8%, 12%, 0.8);
+    --glass-border: hsla(250, 100%, 70%, 0.2);
+    
+    /* Enhanced shadows with glow */
+    --shadow-soft: 0 4px 24px hsla(250, 100%, 70%, 0.15);
+    --shadow-glow: 0 0 40px hsla(250, 100%, 65%, 0.5), 0 0 80px hsla(260, 80%, 55%, 0.25);
+    --shadow-float: 0 8px 40px hsla(250, 100%, 70%, 0.2);
+    --shadow-ambient: 0 0 100px hsla(250, 100%, 65%, 0.1);
+
+    /* Transitions */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
