@@ -79,10 +79,6 @@ class ChatResponse(BaseModel):
     response: str
     status: str = "success"
 
-@app.get("/")
-async def root():
-    return {"message": "SRB RAG Chatbot API is running!", "status": "healthy"}
-
 @app.get("/health")
 async def health_check():
     return {
@@ -173,17 +169,25 @@ if os.path.exists("static"):
 
 # Serve React app
 @app.get("/{full_path:path}")
-async def serve_react_app(full_path: str):
+async def serve_react_app(full_path: str = ""):
     """Serve React app for any path that doesn't match API routes"""
-    if full_path.startswith("chat") or full_path.startswith("health"):
-        # Let API routes handle themselves
+    print(f"DEBUG: Requested path: '{full_path}'")
+    print(f"DEBUG: Static directory exists: {os.path.exists('static')}")
+    print(f"DEBUG: index.html exists: {os.path.exists('static/index.html')}")
+    if os.path.exists('static'):
+        print(f"DEBUG: Static directory contents: {os.listdir('static')}")
+    
+    # Let API routes handle themselves
+    if full_path.startswith("chat") or full_path.startswith("health") or full_path.startswith("docs") or full_path.startswith("openapi"):
         raise HTTPException(status_code=404, detail="Not found")
     
-    # Serve React app's index.html for all other routes
+    # Serve React app's index.html for all routes (including root)
     if os.path.exists("static/index.html"):
+        print("DEBUG: Serving React app index.html")
         return FileResponse("static/index.html")
     else:
-        return {"message": "SRB RAG Chatbot API is running!", "status": "healthy", "note": "Frontend not available"}
+        print("DEBUG: static/index.html not found, returning JSON response")
+        return {"message": "SRB RAG Chatbot API is running!", "status": "healthy", "note": "Frontend not available - static/index.html not found"}
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 7860))  # HF Spaces uses port 7860
