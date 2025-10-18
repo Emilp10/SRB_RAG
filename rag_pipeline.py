@@ -1,14 +1,21 @@
 import os
 import requests
-import fitz  # PyMuPDF
-from tqdm.auto import tqdm
-from spacy.lang.en import English
+import numpy as np
 from sentence_transformers import SentenceTransformer
 import faiss
-import numpy as np
 from google import genai
 from google.genai import types
 from dotenv import load_dotenv
+
+# Optional dependencies for PDF processing (not needed if using preprocessed files)
+try:
+    import fitz  # PyMuPDF
+    from tqdm.auto import tqdm
+    from spacy.lang.en import English
+    PDF_PROCESSING_AVAILABLE = True
+except ImportError:
+    print("Warning: PDF processing libraries not available. Using preprocessed files only.")
+    PDF_PROCESSING_AVAILABLE = False
 
 
 load_dotenv()
@@ -25,6 +32,8 @@ def text_formatter(text: str) -> str:
 
 def open_and_read_pdf(pdf_path: str) -> list[dict]:
     """Reads PDF pages into a structured list of dicts."""
+    if not PDF_PROCESSING_AVAILABLE:
+        raise ImportError("PDF processing libraries not available. Use preprocessed files instead.")
     doc = fitz.open(pdf_path)
     pages_and_texts = []
     for page_number, page in tqdm(enumerate(doc), total=len(doc), desc="Reading PDF"):
@@ -42,6 +51,8 @@ def open_and_read_pdf(pdf_path: str) -> list[dict]:
 
 
 def sentence_splitter(pages_and_texts, chunk_size=5):
+    if not PDF_PROCESSING_AVAILABLE:
+        raise ImportError("Text processing libraries not available. Use preprocessed files instead.")
     nlp = English()
     nlp.add_pipe("sentencizer")
     chunks = []
