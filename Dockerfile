@@ -10,10 +10,10 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy Python requirements first for better caching
-COPY requirements_hf.txt .
+COPY requirements_minimal.txt .
 
 # Install Python dependencies
-RUN pip install --no-cache-dir -r requirements_hf.txt
+RUN pip install --no-cache-dir -r requirements_minimal.txt
 
 # Copy Python files and necessary assets
 COPY app_hf.py .

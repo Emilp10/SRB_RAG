@@ -1,24 +1,13 @@
 # Core FastAPI and server
-fastapi==0.104.1
-uvicorn[standard]==0.24.0
+fastapi>=0.104.0
+uvicorn[standard]>=0.24.0
 
-# AI/ML dependencies  
-sentence-transformers==2.2.2
-faiss-cpu==1.7.4
-google-generativeai==0.3.2
-transformers==4.35.2
+# AI/ML dependencies (let pip resolve compatible versions)
+sentence-transformers>=2.3.0,<3.0.0
+faiss-cpu>=1.7.0,<2.0.0
+google-generativeai>=0.3.0,<1.0.0
 
-# PDF processing (optimized)
-PyMuPDF==1.23.5
-
-# Utilities
-python-dotenv==1.0.0
-requests==2.31.0
-numpy==1.24.3
-tqdm==4.66.1
-
-# NLP
-spacy==3.7.2
-
-# For production
-gunicorn==21.2.0
+# Basic utilities
+python-dotenv>=1.0.0
+requests>=2.31.0
+numpy>=1.24.0,<2.0.0

@@ -9,7 +9,14 @@ import pickle
 import os
 import json
 import asyncio
-from sentence_transformers import SentenceTransformer
+try:
+    from sentence_transformers import SentenceTransformer
+    SENTENCE_TRANSFORMERS_AVAILABLE = True
+except ImportError as e:
+    print(f"Warning: SentenceTransformers import failed: {e}")
+    SentenceTransformer = None
+    SENTENCE_TRANSFORMERS_AVAILABLE = False
+
 from rag_pipeline import answer_query, answer_query_streaming, client
 import uvicorn
 
@@ -28,7 +35,10 @@ async def lifespan(app: FastAPI):
     SENTENCES_PATH = "sentences.pkl"
     MODEL_NAME = "all-mpnet-base-v2"
     
-    if os.path.exists(INDEX_PATH) and os.path.exists(SENTENCES_PATH):
+    if not SENTENCE_TRANSFORMERS_AVAILABLE:
+        print("❌ SentenceTransformers not available. Cannot load models.")
+        assets_loaded = False
+    elif os.path.exists(INDEX_PATH) and os.path.exists(SENTENCES_PATH):
         print("🚀 Loading models and data...")
         try:
             # Use CPU for Hugging Face Spaces (no GPU guaranteed)

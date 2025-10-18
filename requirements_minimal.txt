@@ -1,0 +1,9 @@
+# Minimal requirements for HF Spaces
+fastapi
+uvicorn[standard]
+sentence-transformers
+faiss-cpu
+google-generativeai
+python-dotenv
+requests
+numpy
